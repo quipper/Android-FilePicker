@@ -147,15 +147,19 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     Toast.LENGTH_SHORT).show();
         } else {
             FilePickerBuilder.getInstance()
-                    .setMaxCount(maxCount)
+                    .setMaxCount(10)
                     .setSelectedFiles(photoPaths) //this is optional
                     .setActivityTheme(R.style.FilePickerTheme)
                     .setActivityTitle("Please select media")
+                    .setImageSizeLimit(5)
+                    .setVideoSizeLimit(10)
+                    .setSpan(FilePickerConst.SPAN_TYPE.FOLDER_SPAN, 3)
+                    .setSpan(FilePickerConst.SPAN_TYPE.DETAIL_SPAN, 4)
                     .enableVideoPicker(true)
                     .enableCameraSupport(true)
                     .showGifs(true)
-                    .showFolderView(true)
-                    .enableSelectAll(false)
+                    .showFolderView(false)
+                    .enableSelectAll(true)
                     .enableImagePicker(true)
                     .setCameraPlaceholder(R.drawable.custom_camera)
                     .withOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
@@ -172,15 +176,17 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     Toast.LENGTH_SHORT).show();
         } else {
             FilePickerBuilder.getInstance()
-                    .setMaxCount(maxCount)
+                    .setMaxCount(1)
                     .setSelectedFiles(docPaths)
                     .setActivityTheme(R.style.FilePickerTheme)
                     .setActivityTitle("Please select doc")
-                    .addFileSupport("ZIP", zips)
-                    .addFileSupport("AAC", pdfs, R.drawable.pdf_blue)
+                    .setImageSizeLimit(5) //Provide Size in MB
+                    .setVideoSizeLimit(20)
+//                    .addFileSupport("ZIP", zips)
+//                    .addFileSupport("AAC", pdfs, R.drawable.pdf_blue)
                     .enableDocSupport(true)
                     .enableSelectAll(true)
-                    .sortDocumentsBy(SortingTypes.name)
+                    .sortDocumentsBy(SortingTypes.NAME)
                     .withOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
                     .pickFile(this);
         }

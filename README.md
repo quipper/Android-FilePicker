@@ -4,7 +4,12 @@
  
 A filepicker which allows to select images and videos with flexibility. It also supports selection of files by specifying its file type. For using this library, you have to migrate your project to [androidx](https://developer.android.com/jetpack/androidx/migrate) or you can use older version(2.1.5). Check out app module for example.
 
-For **Android 10** devices using document picker, you will need to enable `android:requestLegacyExternalStorage="true"` option in your manifest file. This document picker will get **deprecated** soon over scoped storage and also, this flag will not work in **Android 11.** :/
+For **Android 10** devices using document picker, you will need to enable `android:requestLegacyExternalStorage="true"` option in your manifest file. This document picker will get **deprecated** soon over scoped storage and also, this flag will not work in when you target **Android 11.** :/
+
+If your app
+* **targets 28**: Everything will work. Nothing required.
+* **targets 29**: You will need add `android:requestLegacyExternalStorage="true"` option in your manifest file. This will work for Android 11 devices also.
+* **targets 30**: Doc picker will not work in this case. Scope storage handling is required. Please suggest [ideas here](https://github.com/DroidNinja/Android-FilePicker/issues/305#issuecomment-728250023)
 
   ![demo](https://image.ibb.co/iRpztv/device_2017_03_10_164003.png)
   ![demo](https://image.ibb.co/m75uRF/device_2017_03_10_163900.png)
@@ -14,7 +19,7 @@ For **Android 10** devices using document picker, you will need to enable `andro
 
 * As of now, It is only available in jCenter(), So just put this in your app dependencies:
 ```gradle
-    implementation 'com.droidninja:filepicker:2.2.4'
+    implementation 'com.droidninja:filepicker:2.2.5'
 ```
 There is a method `getFilePath` in `ContentUriUtils` class through you can get the file path from Uri. e.g.
 
@@ -114,6 +119,7 @@ showFolderView(boolean status)    | if you want to show folder type pick view, e
 enableDocSupport(boolean status)    | If you want to enable/disable default document picker, use this method. (*Enabled by default*)
 enableCameraSupport(boolean status)    | to show camera in the picker (*Enabled by default*)
 addFileSupport(String title, String[] extensions, @DrawableRes int drawable)    | If you want to specify custom file type, use this method. (*example below*)
+setSpan(spanType: FilePickerConst.SPAN_TYPE, count: Int)    | Set Span count for folder and detail screen ( [FilePickerConst.SPAN_TYPE.FOLDER_SPAN] or [FilePickerConst.SPAN_TYPE.DETAIL_SPAN]])
 
 If you want to add custom file type picker(do not use . in extension types), use *addFileSupport()* method like this ( for zip support):
 
@@ -122,30 +128,55 @@ String zipTypes = {"zip","rar"};
     addFileSupport("ZIP",zipTypes, R.drawable.ic_zip_icon);
 ```
 
-#Styling
-Just override these styles in your main module to change colors and themes
+# Styling
+
+Just override these styles in your main module to change colors and themes.
+
+- If you have dark theme colors, just use `LibAppTheme.Dark`
+- If you have light theme colors, just use `LibAppTheme`
+
 ```xml
-<style name="LibAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+<style name="LibAppTheme" parent="Theme.MaterialComponents.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@android:color/black</item>
         <item name="android:colorBackground">@android:color/background_light</item>
         <item name="android:windowBackground">@android:color/white</item>
+        <item name="toolbarStyle">@style/ToolbarTheme</item>
+        <item name="tabStyle">@style/PickerTabLayout</item>
     </style>
 
-    <style name="PickerTabLayout" parent="Widget.Design.TabLayout">
-        <item name="tabBackground">@color/colorPrimary</item>
-        <item name="tabGravity">fill</item>
-        <item name="tabMaxWidth">0dp</item>
+    <style name="LibAppTheme.Dark" parent="LibAppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@android:color/white</item>
+        <item name="toolbarStyle">@style/ToolbarTheme.Dark</item>
+        <item name="tabStyle">@style/PickerTabLayout.Dark</item>
     </style>
+
+    <style name="PickerTabLayout" parent="Widget.MaterialComponents.TabLayout">
+           <!--        tab background-->
+           <item name="tabBackground">@color/colorPrimary</item>
+           <!--        tab text color selector : set selector accordingly to dark or light theme-->
+           <item name="tabTextColor">@color/selector_tab_text_color</item>
+           <!--        tab indicator color: set indicator color accordingly-->
+           <item name="tabIndicatorColor">@android:color/black</item>
+           <item name="tabGravity">fill</item>
+           <item name="tabMaxWidth">0dp</item>
+       </style>
+
+
+       <style name="ToolbarTheme" parent="Widget.MaterialComponents.Toolbar.Primary">
+               <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar.Light</item>
+               <item name="android:theme">@style/ThemeOverlay.App.Toolbar.Light</item>
+           </style>
     
     <style name="SmoothCheckBoxStyle">
-        <item name="color_checked">@color/checkbox_color</item>
-        <item name="color_unchecked">@android:color/white</item>
-        <item name="color_unchecked_stroke">@color/checkbox_unchecked_color</item>
-        <item name="color_tick">@android:color/white</item>
-    </style>
+            <item name="color_checked">@color/colorAccent</item>
+            <item name="color_unchecked">@android:color/white</item>
+            <item name="color_unchecked_stroke">@color/checkbox_unchecked_color</item>
+            <item name="color_tick">@android:color/white</item>
+        </style>
 ```
 
 # Proguard
