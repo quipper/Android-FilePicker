@@ -18,7 +18,7 @@ buildscript {
 }
 
 apply plugin: 'com.github.dcendents.android-maven'
-group='com.github.leo0263'
+group='com.github.quipper'
 
 allprojects {
     repositories {
