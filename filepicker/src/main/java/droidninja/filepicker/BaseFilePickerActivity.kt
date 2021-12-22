@@ -16,7 +16,7 @@ abstract class BaseFilePickerActivity : AppCompatActivity() {
         setTheme(PickerManager.theme)
         setContentView(layout)
 
-        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
+        val toolbar = findViewById<MaterialToolbar>(R.id.material_toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
